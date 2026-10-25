@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: basecoat
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements-prod.txt
+    startCommand: gunicorn --workers 1 --threads 4 --timeout 120 --bind 0.0.0.0:$PORT server:app
+    healthCheckPath: /api/health
+    disk:
+      name: basecoat-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: BASECOAT_ENV
+        value: production
+      - key: BASECOAT_DEMO_MODE
+        value: "0"
+      - key: BASECOAT_DATA_DIR
+        value: /var/data
+      - key: BASECOAT_SECRET
+        generateValue: true
+      - key: BASECOAT_OWNER_EMAIL
+        sync: false
+      - key: BASECOAT_OWNER_PASSWORD
+        sync: false
+      - key: BASECOAT_OWNER_NAME
+        sync: false
+      - key: BASECOAT_PUBLIC_URL
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
